@@ -1,37 +1,37 @@
-// TODO: Include packages needed for this application
+// Packages needed for this application
 const inquirer = require ('inquirer')
-
-// TODO: Create an array of questions for user input
+const {writeFile} = require('fs').promises;
+// An array of questions for user input
 const questions = () => {
     return inquirer.prompt([
         {
             type: 'input',
-            name: 'Title',
+            name: 'title',
             message: 'What is the title of your project?'
         },
         {
             type: 'input',
-            name: 'Description',
+            name: 'description',
             message: 'Add a description of your project'
         },
         {
             type: 'list',
-            name: 'Contents',
+            name: 'contents',
             message: 'Add sections for your table of contents'
         },
         {
             type: 'input',
-            name: 'Installation',
+            name: 'installation',
             message: 'How do you install your application?'
         },
         {
             type: 'input',
-            name: 'Usage',
+            name: 'usage',
             message:'How do you use your application?'
         },
         {
             type: 'list',
-            name: 'License',
+            name: 'license',
             message: 'Which license did you use?',
             choices: ['MIT', 'Apache', 'GNU', 'GPL', 'N/A']
         },
@@ -44,15 +44,26 @@ const questions = () => {
             type: 'input',
             name: 'tests',
             message: 'Please provide examples of how you ran tests on the project so others may run the same tests'
+        },
+        {
+            type: 'input',
+            name: 'question',
+            message: ' '
+
         }
     ])
 };
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+
 
 // TODO: Create a function to initialize app
-function init() {}
+const init = () => {
+    questions()
+    .then((answers) => writeToFile('README.md', writeFile(answers)))
+    .then(() => console.log('The ReadMe file has successfully been created!'))
+    .catch((err) => console.error(err));
+};
 
 // Function call to initialize app
 init();
