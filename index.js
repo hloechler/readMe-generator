@@ -1,9 +1,9 @@
 // Packages needed for this application
 const inquirer = require ('inquirer')
-const {writeFile} = require('fs').promises;
+const fs = require('fs');
 // An array of questions for user input
-const questions = () => {
-    return inquirer.prompt([
+inquirer
+    .prompt([
         {
             type: 'input',
             name: 'title',
@@ -12,12 +12,7 @@ const questions = () => {
         {
             type: 'input',
             name: 'description',
-            message: 'Add a description of your project'
-        },
-        {
-            type: 'list',
-            name: 'contents',
-            message: 'Add sections for your table of contents'
+            message: 'Add a description of your project:'
         },
         {
             type: 'input',
@@ -38,32 +33,65 @@ const questions = () => {
         {
             type: 'input',
             name: 'contributors',
-            message: 'Did anyone else contribute to the project and if so please list their names and links to GitHub?'
+            message: 'Did anyone else contribute to the project? If so please list their names and links to GitHub. If not please press enter.'
         },
         {
             type: 'input',
             name: 'tests',
-            message: 'Please provide examples of how you ran tests on the project so others may run the same tests'
+            message: 'Please provide examples of how you ran tests on the project so others may run the same tests. If not please press enter.'
         },
         {
             type: 'input',
             name: 'question',
-            message: ' '
+            message: 'Please provide your GitHub link:'
 
-        }
+        },
+        {
+        type: 'input',
+            name: 'question2',
+            message: 'Please provide your email address:'
+        },
+        {
+        type: 'input',
+            name: 'question3',
+            message: 'Please leave additional instructions on the best way to contact you:'
+        },
+        
     ])
-};
+    .then((answers) => {
+        const readMeFile = writeToFile(answers);
+        fs.writeFile('readme.md', readMeFile, (err) => 
+        err ? console.log(err) : console.log ('The readMe file has been created!')
+        );
+    });
 
 // TODO: Create a function to write README file
+const writeToFile = ({ title, description, installation, usage, license, contributors, tests, question, question2, question3 }) => 
+`# ${title}
+## Description
+${description}
+## Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
+- [Contributors](#contributors)
+- [Tests](#tests)
+- [Questions](#question)
+## Installation
+${installation}
+## Usage
+${usage}
+## License
+This application is covered under the ${license} license.
+## Contributors
+${contributors}
+## Tests
+${tests}
+## Questions
+<a ${question}> </a>
+<a ${question2}> </a>
+${question3}`
 
 
-// TODO: Create a function to initialize app
-const init = () => {
-    questions()
-    .then((answers) => writeToFile('README.md', writeFile(answers)))
-    .then(() => console.log('The ReadMe file has successfully been created!'))
-    .catch((err) => console.error(err));
-};
 
-// Function call to initialize app
-init();
+
